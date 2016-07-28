@@ -11,6 +11,9 @@ const {
 } = require('graphql');
 
 const {
+  connectionDefinitions,
+  connectionArgs,
+  connectionFromPromisedArray,
   nodeDefinitions,
   globalIdField,
   fromGlobalId,
@@ -63,10 +66,22 @@ const personType = new GraphQLObjectType({
   }
 });
 
+var { connectionType: personConnectionType } = connectionDefinitions({
+  name: 'Person',
+  nodeType: personType,
+});
+
 const queryType = new GraphQLObjectType({
   name: 'RootQuery',
   fields: {
     node: nodeField,
+    personConnection: {
+      type: personConnectionType,
+      args: connectionArgs,
+      resolve: (obj, args, { pool }) => {
+        return connectionFromPromisedArray(db(pool).getAllUsers(), args); 
+      }
+    },
     people: {
       type: new GraphQLList(personType),
       resolve: (obj, args, { pool }) => {

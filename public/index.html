@@ -3,6 +3,15 @@
   <head>
     <meta charset="utf-8">
     <title></title>
+    <script type="text/javascript">
+      fetch(`/graphql?query={
+        people {
+          fullName
+        }
+      }`)
+      .then(response => response.json())
+      .then(results => console.log(results));
+    </script>
   </head>
   <body>
     <h1>Hello express</h1>

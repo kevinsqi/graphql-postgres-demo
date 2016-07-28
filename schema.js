@@ -21,8 +21,9 @@ const personType = new GraphQLObjectType({
     id: {
       type: GraphQLID
     },
-    first_name: {
-      type: GraphQLString
+    firstName: {
+      type: GraphQLString,
+      resolve: (obj) => obj.first_name
     },
     last_name: {
       type: GraphQLString

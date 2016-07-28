@@ -76,13 +76,13 @@ const queryType = new GraphQLObjectType({
 		person: {
       type: personType,
       args: {
-        id: {
+        personId: {
           type: new GraphQLNonNull(GraphQLInt)
         }
       },
       resolve: (obj, args, { loaders }) => {
         console.log(args);
-        return loaders.usersByIds.load(args.id);
+        return loaders.usersByIds.load(args.personId);
       }
     }
   }

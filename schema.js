@@ -9,14 +9,6 @@ const {
 
 const humps = require('humps');
 
-const person = humps.camelizeKeys({
-	id: 1,
-	first_name: 'kevin',
-	last_name: 'qi',
-	email: 'test123@example.com',
-	spouse_id: 2
-});
-
 const personType = new GraphQLObjectType({
   name: 'Person',
   fields: {
@@ -43,7 +35,13 @@ const queryType = new GraphQLObjectType({
   fields: {
 		person: {
       type: personType,
-      resolve: () => person
+      resolve: (obj, args, { pool }) => {
+        return pool.query(`
+          select * from spouses
+          where id = 1
+        `, [])
+          .then(result => humps.camelizeKeys(result.rows[0]))
+      }
     }
   }
 });

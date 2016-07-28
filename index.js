@@ -1,6 +1,9 @@
+// graphql
 const { graphql } = require('graphql');
 const graphqlHTTP = require('express-graphql');
+const mySchema = require('./schema');
 
+// postgres
 const pg = require('pg');
 const config = {
   database: 'forward'
@@ -11,16 +14,21 @@ pool.query(`
 `, [])
   .then(result => console.log(result.rows));
 
+// express
 const express = require('express');
 const app = express();
-
-const mySchema = require('./schema');
 
 app.get('/', (req, res) => {
   res.send('hello express');
 });
 
-app.use('/graphql', graphqlHTTP({ schema: mySchema, graphiql: true }));
+app.use('/graphql', graphqlHTTP({
+  schema: mySchema,
+  graphiql: true,
+  context: {
+    pool
+  }
+}));
 
 app.listen(3000, () => {
   console.log('express is running...');

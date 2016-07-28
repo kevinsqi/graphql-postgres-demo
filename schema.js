@@ -28,6 +28,10 @@ const personType = new GraphQLObjectType({
     spouseId: {
       type: GraphQLInt
     },
+    fullName: {
+      type: GraphQLString,
+      resolve: (obj) => `${obj.firstName} ${obj.lastName}`
+    }
   }
 });
 

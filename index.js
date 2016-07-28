@@ -1,3 +1,7 @@
+// dataloader
+const DataLoader = require('dataloader');
+const db = require('./database');
+
 // graphql
 const { graphql } = require('graphql');
 const graphqlHTTP = require('express-graphql');
@@ -22,13 +26,20 @@ app.get('/', (req, res) => {
   res.send('hello express');
 });
 
-app.use('/graphql', graphqlHTTP({
-  schema: mySchema,
-  graphiql: true,
-  context: {
-    pool
-  }
-}));
+app.use('/graphql', (req, res) => {
+  const loaders = {
+    usersByIds: new DataLoader(db(pool).getUsersByIds)
+  };
+
+  graphqlHTTP({
+    schema: mySchema,
+    graphiql: true,
+    context: {
+      pool,
+      loaders,
+    }
+  })(req, res);
+});
 
 app.listen(3000, () => {
   console.log('express is running...');

@@ -12,26 +12,35 @@ const humps = require('humps');
 
 const personType = new GraphQLObjectType({
   name: 'Person',
-  fields: {
-    id: {
-      type: GraphQLID
-    },
-    firstName: {
-      type: GraphQLString
-    },
-    lastName: {
-      type: GraphQLString
-    },
-    email: {
-      type: GraphQLString
-    },
-    spouseId: {
-      type: GraphQLInt
-    },
-    fullName: {
-      type: GraphQLString,
-      resolve: (obj) => `${obj.firstName} ${obj.lastName}`
-    }
+  fields: () => {  // use a thunk because it's self-referential (actually, always use a thunk)
+    return {
+      id: {
+        type: GraphQLID
+      },
+      firstName: {
+        type: GraphQLString
+      },
+      lastName: {
+        type: GraphQLString
+      },
+      email: {
+        type: GraphQLString
+      },
+      spouse: {
+        type: personType,
+        resolve: (obj, args, { pool }) => {
+          return pool.query(`
+            select * from spouses
+            where id = $1
+          `, [obj.spouseId])
+            .then(result => humps.camelizeKeys(result.rows[0]))
+        },
+      },
+      fullName: {
+        type: GraphQLString,
+        resolve: (obj) => `${obj.firstName} ${obj.lastName}`
+      }
+    };
   }
 });
 

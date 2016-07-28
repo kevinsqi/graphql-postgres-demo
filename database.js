@@ -6,5 +6,11 @@ module.exports = (pool) => ({
       select * from spouses where id = $1
     `, [userID])
       .then(result => humps.camelizeKeys(result.rows[0]));
+  },
+  getAllUsers() {
+    return pool.query(`
+      select * from spouses
+    `, [])
+      .then(result => humps.camelizeKeys(result.rows));
   }
 });

@@ -54,8 +54,8 @@ const personType = new GraphQLObjectType({
       },
       spouse: {
         type: personType,
-        resolve: (obj, args, { pool }) => {
-          return db(pool).getUserById(obj.spouseId);
+        resolve: (obj, args, { loaders }) => {
+          return loaders.usersByIds.load(obj.spouseId);
         },
       },
       fullName: {

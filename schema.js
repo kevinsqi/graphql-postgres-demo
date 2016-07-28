@@ -46,7 +46,7 @@ const queryType = new GraphQLObjectType({
     people: {
       type: new GraphQLList(personType),
       resolve: (obj, args, { pool }) => {
-        //return db(pool).getAllUsers();
+        // ???
       }
     },
 		person: {

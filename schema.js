@@ -7,13 +7,15 @@ const {
   GraphQLList,
 } = require('graphql');
 
-const person = {
+const humps = require('humps');
+
+const person = humps.camelizeKeys({
 	id: 1,
 	first_name: 'kevin',
 	last_name: 'qi',
 	email: 'test123@example.com',
 	spouse_id: 2
-};
+});
 
 const personType = new GraphQLObjectType({
   name: 'Person',
@@ -22,16 +24,15 @@ const personType = new GraphQLObjectType({
       type: GraphQLID
     },
     firstName: {
-      type: GraphQLString,
-      resolve: (obj) => obj.first_name
+      type: GraphQLString
     },
-    last_name: {
+    lastName: {
       type: GraphQLString
     },
     email: {
       type: GraphQLString
     },
-    spouse_id: {
+    spouseId: {
       type: GraphQLInt
     },
   }
